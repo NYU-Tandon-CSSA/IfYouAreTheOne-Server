@@ -59,7 +59,3 @@ mongoose
   .catch((err) => {
     console.error(err);
   });
-
-server.listen({ port: 5000 }).then((res) => {
-  console.log(`Server running at ${res.url}`);
-});
