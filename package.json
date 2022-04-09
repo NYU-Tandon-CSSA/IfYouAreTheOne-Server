@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "start": "nodemon index"
+    "start": "node index"
   },
   "dependencies": {
     "apollo-server": "^3.6.7",
