@@ -3,10 +3,12 @@
     "start": "node index"
   },
   "dependencies": {
+    "@graphql-tools/schema": "^8.3.9",
     "apollo-server": "^3.6.7",
     "graphql": "^16.3.0",
     "graphql-subscriptions": "^2.0.0",
-    "mongoose": "^6.2.9"
+    "mongoose": "^6.2.9",
+    "subscriptions-transport-ws": "^0.11.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
