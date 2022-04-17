@@ -24,6 +24,7 @@ const { MONGODB } = require("./config");
     type Pick {
       name: String!
       pick: String!
+      show: Boolean!
     }
     type Query {
       getLights: [Light]
@@ -32,6 +33,7 @@ const { MONGODB } = require("./config");
     type Mutation {
       updateLight(name: String!, mode: String!): Light!
       updatePick(name: String!, pick: String!): Pick!
+      showPick(name: String!, show: Boolean!): Pick!
     }
     type Subscription {
       lightUpdated: [Light]
@@ -79,6 +81,20 @@ const { MONGODB } = require("./config");
         const res = await Pick.findOneAndUpdate(
           { name: args.name },
           { pick: args.pick },
+          { new: true }
+        );
+
+        const picks = await Pick.find();
+        pubsub.publish("PICK_UPDATED", {
+          pickUpdated: picks,
+        });
+        return res;
+      },
+
+      async showPick(parent, args, context, info) {
+        const res = await Pick.findOneAndUpdate(
+          { name: args.name },
+          { show: args.show },
           { new: true }
         );
 
