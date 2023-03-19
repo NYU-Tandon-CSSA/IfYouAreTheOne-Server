@@ -1,4 +1,4 @@
 module.exports = {
   MONGODB:
-    "mongodb+srv://ray:T7VXOqr365ETn7zE@cluster0.48gao.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+    "mongodb+srv://peijiannuo:peijiannuo@cluster0.os0txtw.mongodb.net/?retryWrites=true&w=majority",
 };
