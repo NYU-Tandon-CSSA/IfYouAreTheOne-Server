@@ -4,13 +4,12 @@
   },
   "dependencies": {
     "@graphql-tools/schema": "^8",
-    "apollo-server": "^3",
+    "apollo-server-express": "^3",
+    "express": "^4",
     "graphql": "^16",
     "graphql-subscriptions": "^2",
+    "graphql-tag": "^2",
     "mongoose": "^7",
     "subscriptions-transport-ws": "^0"
-  },
-  "devDependencies": {
-    "nodemon": "^2"
   }
 }
