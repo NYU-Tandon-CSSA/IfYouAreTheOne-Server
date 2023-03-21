@@ -149,8 +149,8 @@ const { MONGODB } = require("./config");
 
   mongoose.connect(MONGODB, { useNewUrlParser: true });
 
-  const PORT = process.env.PORT || 5000;
+  const PORT = process.env.PORT || 7789;
   httpServer.listen(PORT, () =>
-    console.log("Server is now running on port" + PORT)
+    console.log("Server is now running on port " + PORT)
   );
 })();
