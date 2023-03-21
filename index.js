@@ -8,9 +8,9 @@ const mongoose = require("mongoose");
 const gql = require("graphql-tag");
 const { PubSub } = require("graphql-subscriptions");
 
-const Light = require("./models/Light.js");
-const Pick = require("./models/Pick.js");
-const { MONGODB } = require("./config.js");
+const Light = require("./models/Light");
+const Pick = require("./models/Pick");
+const { MONGODB } = require("./config");
 
 (async function () {
   const app = express();
@@ -147,11 +147,10 @@ const { MONGODB } = require("./config.js");
   await server.start();
   server.applyMiddleware({ app });
 
-  mongoose.set("strictQuery", false);
   mongoose.connect(MONGODB, { useNewUrlParser: true });
 
-  const PORT = process.env.PORT || 6000;
+  const PORT = process.env.PORT || 5000;
   httpServer.listen(PORT, () =>
-    console.log("Server is now running on port " + PORT)
+    console.log("Server is now running on port" + PORT)
   );
 })();
