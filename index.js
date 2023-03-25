@@ -20,6 +20,7 @@ const { MONGODB } = require("./config");
     type Light {
       name: String!
       mode: String!
+      realname: String!
     }
     type Pick {
       name: String!
