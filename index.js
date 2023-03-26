@@ -18,13 +18,13 @@ const { MONGODB } = require("./config");
 
   const typeDefs = gql`
     type Light {
+      userid: Int!
       name: String!
       mode: String!
-      realname: String!
     }
     type Pick {
-      name: String!
-      pick: String!
+      user: String!
+      userid: Int!
       show: Boolean!
     }
     type Query {
@@ -32,9 +32,9 @@ const { MONGODB } = require("./config");
       getPicks: [Pick]
     }
     type Mutation {
-      updateLight(name: String!, mode: String!): Light!
-      updatePick(name: String!, pick: String!): Pick!
-      showPick(name: String!, show: Boolean!): Pick!
+      updateLight(userid: Int!, mode: String!): Light!
+      updatePick(user: String!, userid: Int!): Pick!
+      showPick(user: String!, show: Boolean!): Pick!
     }
     type Subscription {
       lightUpdated: [Light]
@@ -66,7 +66,7 @@ const { MONGODB } = require("./config");
     Mutation: {
       async updateLight(parent, args, context, info) {
         const res = await Light.findOneAndUpdate(
-          { name: args.name },
+          { userid: args.userid },
           { mode: args.mode },
           { new: true }
         );
@@ -80,8 +80,8 @@ const { MONGODB } = require("./config");
 
       async updatePick(parent, args, context, info) {
         const res = await Pick.findOneAndUpdate(
-          { name: args.name },
-          { pick: args.pick },
+          { user: args.user },
+          { userid: args.userid },
           { new: true }
         );
 
@@ -94,7 +94,7 @@ const { MONGODB } = require("./config");
 
       async showPick(parent, args, context, info) {
         const res = await Pick.findOneAndUpdate(
-          { name: args.name },
+          { user: args.user },
           { show: args.show },
           { new: true }
         );
