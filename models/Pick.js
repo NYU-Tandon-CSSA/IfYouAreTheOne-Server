@@ -9,7 +9,7 @@ const pickSchema = new Schema({
 module.exports = model("Pick", pickSchema);
 
 /*
-user:   没用，默认user，原名叫name
-userid: 爆灯中间的编号，原名叫pick
+user:   默认为user
+userid: 爆灯中间的编号
 show:   显示隐藏爆灯开关
 */
