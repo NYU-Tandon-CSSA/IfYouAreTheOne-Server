@@ -32,7 +32,7 @@ const { MONGODB } = require("./config");
       getPicks: [Pick]
     }
     type Mutation {
-      updateLight(userid: Int!, mode: String!): Light!
+      updateLight(userid: Int!, name: String!, mode: String!): Light!
       updatePick(user: String!, userid: Int!): Pick!
       showPick(user: String!, show: Boolean!): Pick!
     }
@@ -67,8 +67,14 @@ const { MONGODB } = require("./config");
       async updateLight(parent, args, context, info) {
         const res = await Light.findOneAndUpdate(
           { userid: args.userid },
-          { mode: args.mode },
-          { new: true }
+          { 
+            name: args.name,
+            mode: args.mode 
+          },
+          { 
+            new: true,
+            upsert: true  // 如果记录不存在则创建新记录
+          }
         );
 
         const lights = await Light.find();
@@ -80,9 +86,16 @@ const { MONGODB } = require("./config");
 
       async updatePick(parent, args, context, info) {
         const res = await Pick.findOneAndUpdate(
-          { user: args.user },
           { userid: args.userid },
-          { new: true }
+          { 
+            user: args.user,
+            userid: args.userid,
+            show: false  // 默认不显示
+          },
+          { 
+            new: true,
+            upsert: true  // 如果记录不存在则创建新记录
+          }
         );
 
         const picks = await Pick.find();
@@ -143,6 +156,8 @@ const { MONGODB } = require("./config");
         },
       },
     ],
+    playground: true,
+    introspection: true,
   });
 
   await server.start();
