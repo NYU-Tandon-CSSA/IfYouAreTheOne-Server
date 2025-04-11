@@ -106,10 +106,20 @@ const { MONGODB } = require("./config");
       },
 
       async showPick(parent, args, context, info) {
+        // 先找到最新的记录
+        const latestPick = await Pick.findOne().sort({ userid: -1 });
+        
+        // 更新最新记录的 show 状态
         const res = await Pick.findOneAndUpdate(
-          { user: args.user },
-          { show: args.show },
-          { new: true }
+          { userid: latestPick.userid },  // 按最新的 userid 查找
+          { 
+            user: args.user,
+            userid: latestPick.userid,
+            show: args.show
+          },
+          { 
+            new: true
+          }
         );
 
         const picks = await Pick.find();
