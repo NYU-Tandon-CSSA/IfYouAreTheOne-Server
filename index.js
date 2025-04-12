@@ -32,7 +32,7 @@ const { MONGODB } = require("./config");
       getPicks: [Pick]
     }
     type Mutation {
-      updateLight(userid: Int!, mode: String!): Light!
+      updateLight(userid: Int!, name: String!, mode: String!): Light!
       updatePick(user: String!, userid: Int!): Pick!
       showPick(user: String!, show: Boolean!): Pick!
     }
@@ -67,8 +67,14 @@ const { MONGODB } = require("./config");
       async updateLight(parent, args, context, info) {
         const res = await Light.findOneAndUpdate(
           { userid: args.userid },
-          { mode: args.mode },
-          { new: true }
+          { 
+            name: args.name,
+            mode: args.mode 
+          },
+          { 
+            new: true,
+            upsert: true  // 如果记录不存在则创建新记录
+          }
         );
 
         const lights = await Light.find();
@@ -79,13 +85,15 @@ const { MONGODB } = require("./config");
       },
 
       async updatePick(parent, args, context, info) {
-        const res = await Pick.findOneAndUpdate(
-          { user: args.user },
-          { userid: args.userid },
-          { new: true }
-        );
+        // 直接创建新记录，不检查是否已存在
+        const res = await Pick.create({
+          user: args.user,
+          userid: args.userid,
+          show: false,
+          createdAt: new Date()  // 添加时间戳以便排序
+        });
 
-        const picks = await Pick.find();
+        const picks = await Pick.find().sort({ createdAt: -1 });  // 按创建时间倒序排序
         pubsub.publish("PICK_UPDATED", {
           pickUpdated: picks,
         });
@@ -93,13 +101,21 @@ const { MONGODB } = require("./config");
       },
 
       async showPick(parent, args, context, info) {
+        // 先找到最新的记录
+        const latestPick = await Pick.findOne().sort({ createdAt: -1 });
+        
+        // 更新最新记录的 show 状态
         const res = await Pick.findOneAndUpdate(
-          { user: args.user },
-          { show: args.show },
-          { new: true }
+          { _id: latestPick._id },  // 使用记录的 _id 来确保更新的是最新记录
+          { 
+            show: args.show
+          },
+          { 
+            new: true
+          }
         );
 
-        const picks = await Pick.find();
+        const picks = await Pick.find().sort({ createdAt: -1 });  // 按创建时间倒序排序
         pubsub.publish("PICK_UPDATED", {
           pickUpdated: picks,
         });
@@ -143,6 +159,8 @@ const { MONGODB } = require("./config");
         },
       },
     ],
+    playground: true,
+    introspection: true,
   });
 
   await server.start();
